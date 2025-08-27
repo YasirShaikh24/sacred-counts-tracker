@@ -8,35 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Islamic Green Theme */
+    --background: 155 20% 98%;
+    --foreground: 155 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 155 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 155 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 155 85% 25%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 155 70% 35%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 155 25% 92%;
+    --secondary-foreground: 155 25% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 155 15% 95%;
+    --muted-foreground: 155 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 155 60% 88%;
+    --accent-foreground: 155 25% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 155 20% 88%;
+    --input: 155 20% 88%;
+    --ring: 155 85% 25%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    /* Islamic Theme Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(155, 85%, 25%), hsl(155, 70%, 35%));
+    --gradient-secondary: linear-gradient(135deg, hsl(155, 25%, 92%), hsl(155, 15%, 95%));
+    --gradient-background: linear-gradient(135deg, hsl(155, 20%, 98%), hsl(155, 15%, 96%));
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%), hsl(155, 15%, 98%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(155 25% 15% / 0.08);
+    --shadow-medium: 0 8px 30px hsl(155 25% 15% / 0.12);
+    --shadow-glow: 0 0 30px hsl(155 85% 25% / 0.15);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +118,131 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Prayer Card Styles */
+  .prayer-card {
+    @apply relative overflow-hidden rounded-3xl p-6 cursor-pointer;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .prayer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .prayer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  /* Progress Bar Styles */
+  .progress-container {
+    @apply relative w-full h-3 rounded-full overflow-hidden;
+    background: hsl(var(--muted));
+  }
+  
+  .progress-bar {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+    background: var(--gradient-primary);
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  /* Islamic Pattern Background */
+  .islamic-pattern {
+    position: relative;
+  }
+  
+  .islamic-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(155 85% 25% / 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(155 70% 35% / 0.02) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Admin Button */
+  .admin-btn {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-glow);
+    transition: var(--transition-bounce);
+    border: none;
+    color: hsl(var(--primary-foreground));
+  }
+  
+  .admin-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px hsl(155 85% 25% / 0.25);
+  }
+
+  /* Counter Animation */
+  .counter {
+    @apply font-bold text-2xl;
+    font-variant-numeric: tabular-nums;
+    transition: var(--transition-smooth);
+  }
+  
+  .counter.updating {
+    animation: pulse-green 0.6s ease-in-out;
+  }
+  
+  @keyframes pulse-green {
+    0%, 100% { 
+      color: hsl(var(--foreground)); 
+    }
+    50% { 
+      color: hsl(var(--primary));
+      transform: scale(1.05);
+    }
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/20 backdrop-blur-sm z-50;
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  .modal-content {
+    @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+    @apply w-[90vw] max-w-md p-6 rounded-3xl;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-medium);
+    animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes modalSlideIn {
+    from { 
+      opacity: 0;
+      transform: translate(-50%, -60%) scale(0.9);
+    }
+    to { 
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 }
