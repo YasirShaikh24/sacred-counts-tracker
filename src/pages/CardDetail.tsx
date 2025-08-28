@@ -131,7 +131,7 @@ const CardDetail = () => {
 
         {/* Add Progress Section */}
         <div className="prayer-card mb-6">
-          <h3 className="text-xl font-semibold mb-4">Add Progress</h3>
+          <h3 className="text-xl font-semibold mb-4">Add Your Contribution</h3>
           <div className="flex gap-3">
             <Input
               type="number"
@@ -151,24 +151,35 @@ const CardDetail = () => {
               Add
             </Button>
           </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            🌟 Your contribution counts towards the group goal
+          </p>
         </div>
 
-        {/* Quick Add Buttons */}
-        <div className="grid grid-cols-4 gap-3 mb-6">
-          {[1, 5, 10, 100].map((num) => (
-            <Button
-              key={num}
-              variant="outline"
-              onClick={() => {
-                updateCardProgress(card.id, num);
-                setIsAnimating(true);
-                setTimeout(() => setIsAnimating(false), 600);
-              }}
-              className="aspect-square"
-            >
-              +{num}
-            </Button>
-          ))}
+        {/* Quick Add Buttons - Enhanced for Admins */}
+        <div className="prayer-card mb-6">
+          <h3 className="text-lg font-semibold mb-4">Quick Add</h3>
+          <div className="grid grid-cols-4 gap-3">
+            {[1, 5, 10, 100].map((num) => (
+              <Button
+                key={num}
+                variant={isAdmin ? "default" : "outline"}
+                onClick={() => {
+                  updateCardProgress(card.id, num);
+                  setIsAnimating(true);
+                  setTimeout(() => setIsAnimating(false), 600);
+                }}
+                className="aspect-square text-lg font-bold hover:scale-105 transition-transform"
+              >
+                +{num}
+              </Button>
+            ))}
+          </div>
+          {isAdmin && (
+            <p className="text-sm text-muted-foreground mt-2 text-center">
+              🔓 Admin mode - Quick updates enabled
+            </p>
+          )}
         </div>
 
         {/* Admin Actions */}
