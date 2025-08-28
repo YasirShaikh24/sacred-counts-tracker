@@ -15,11 +15,14 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Islamic Prayer Tracker
+          <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2 urdu-text">
+            جنت میں جانے کا ذریعہ
           </h1>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            JAANAT ME JAANE KA ZARIYA
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Track your daily prayers and dhikr with beautiful progress tracking
+            Group Prayer Tracker - Everyone's contributions count together
           </p>
         </div>
 

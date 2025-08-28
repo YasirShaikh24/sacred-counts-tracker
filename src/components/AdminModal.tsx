@@ -75,7 +75,7 @@ export const AdminModal = ({ isOpen, onClose }: AdminModalProps) => {
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Enter PIN (default: 1234)"
+                placeholder="Enter Admin PIN"
                 className="w-full"
                 autoFocus
               />

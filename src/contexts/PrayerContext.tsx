@@ -16,7 +16,7 @@ interface PrayerContextType {
 const PrayerContext = createContext<PrayerContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'islamic-prayer-tracker';
-const DEFAULT_PIN = '1234';
+const DEFAULT_PIN = '2412';
 
 const defaultCards: PrayerCard[] = [
   { id: '1', name: 'Yaseen', currentCount: 0, targetCount: 1000, progress: 0 },
