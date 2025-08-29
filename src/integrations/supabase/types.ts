@@ -14,7 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      prayer_cards: {
+        Row: {
+          created_at: string
+          current_count: number
+          id: string
+          name: string
+          target_count: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_count?: number
+          id?: string
+          name: string
+          target_count?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_count?: number
+          id?: string
+          name?: string
+          target_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

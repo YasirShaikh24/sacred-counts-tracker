@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { PrayerCard, AppData } from '@/types/prayer';
+import { supabase } from '@/integrations/supabase/client';
 
 interface PrayerContextType {
   cards: PrayerCard[];
   isAdmin: boolean;
+  loading: boolean;
   updateCardProgress: (cardId: string, amount: number) => void;
   addCard: (name: string, targetCount: number) => void;
   deleteCard: (cardId: string) => void;
@@ -30,91 +32,215 @@ const defaultCards: PrayerCard[] = [
 export const PrayerProvider = ({ children }: { children: ReactNode }) => {
   const [cards, setCards] = useState<PrayerCard[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Load data from localStorage on mount
+  // Load data from Supabase on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        const data: AppData = JSON.parse(stored);
-        setCards(data.cards || defaultCards);
-      } catch {
-        setCards(defaultCards);
-      }
-    } else {
-      setCards(defaultCards);
-    }
+    loadCards();
   }, []);
 
-  // Save to localStorage whenever cards change
-  useEffect(() => {
-    if (cards.length > 0) {
-      const data: AppData = {
-        cards,
-        adminPin: DEFAULT_PIN,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const loadCards = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('prayer_cards')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        // Convert Supabase data to our format
+        const formattedCards: PrayerCard[] = data.map(card => ({
+          id: card.id,
+          name: card.name,
+          currentCount: card.current_count,
+          targetCount: card.target_count,
+          progress: calculateProgress(card.current_count, card.target_count),
+        }));
+        setCards(formattedCards);
+      } else {
+        // No cards exist, insert default cards
+        await insertDefaultCards();
+      }
+    } catch (error) {
+      console.error('Error loading cards:', error);
+      // Fallback to localStorage for backward compatibility
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          const data: AppData = JSON.parse(stored);
+          setCards(data.cards || defaultCards);
+        } catch {
+          setCards(defaultCards);
+        }
+      } else {
+        setCards(defaultCards);
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [cards]);
+  };
+
+  const insertDefaultCards = async () => {
+    try {
+      const cardsToInsert = defaultCards.map(card => ({
+        id: card.id,
+        name: card.name,
+        current_count: card.currentCount,
+        target_count: card.targetCount,
+      }));
+
+      const { data, error } = await supabase
+        .from('prayer_cards')
+        .insert(cardsToInsert)
+        .select();
+
+      if (error) throw error;
+
+      if (data) {
+        const formattedCards: PrayerCard[] = data.map(card => ({
+          id: card.id,
+          name: card.name,
+          currentCount: card.current_count,
+          targetCount: card.target_count,
+          progress: calculateProgress(card.current_count, card.target_count),
+        }));
+        setCards(formattedCards);
+      }
+    } catch (error) {
+      console.error('Error inserting default cards:', error);
+      setCards(defaultCards);
+    }
+  };
 
   const calculateProgress = (current: number, target: number): number => {
     return Math.min(Math.round((current / target) * 100), 100);
   };
 
-  const updateCardProgress = (cardId: string, amount: number) => {
-    setCards(prev => prev.map(card => {
-      if (card.id === cardId) {
-        const newCount = card.currentCount + amount;
-        return {
-          ...card,
-          currentCount: newCount,
-          progress: calculateProgress(newCount, card.targetCount),
-        };
-      }
-      return card;
-    }));
+  const updateCardProgress = async (cardId: string, amount: number) => {
+    try {
+      const card = cards.find(c => c.id === cardId);
+      if (!card) return;
+
+      const newCount = card.currentCount + amount;
+
+      const { error } = await supabase
+        .from('prayer_cards')
+        .update({ current_count: newCount })
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      // Update local state
+      setCards(prev => prev.map(card => {
+        if (card.id === cardId) {
+          return {
+            ...card,
+            currentCount: newCount,
+            progress: calculateProgress(newCount, card.targetCount),
+          };
+        }
+        return card;
+      }));
+    } catch (error) {
+      console.error('Error updating card progress:', error);
+    }
   };
 
-  const addCard = (name: string, targetCount: number) => {
-    const newCard: PrayerCard = {
-      id: Date.now().toString(),
-      name,
-      currentCount: 0,
-      targetCount,
-      progress: 0,
-    };
-    setCards(prev => [...prev, newCard]);
-  };
-
-  const deleteCard = (cardId: string) => {
-    setCards(prev => prev.filter(card => card.id !== cardId));
-  };
-
-  const editCard = (cardId: string, name: string, targetCount: number) => {
-    setCards(prev => prev.map(card => {
-      if (card.id === cardId) {
-        return {
-          ...card,
+  const addCard = async (name: string, targetCount: number) => {
+    try {
+      const { data, error } = await supabase
+        .from('prayer_cards')
+        .insert({
           name,
-          targetCount,
-          progress: calculateProgress(card.currentCount, targetCount),
-        };
-      }
-      return card;
-    }));
-  };
+          current_count: 0,
+          target_count: targetCount,
+        })
+        .select()
+        .single();
 
-  const resetCard = (cardId: string) => {
-    setCards(prev => prev.map(card => {
-      if (card.id === cardId) {
-        return {
-          ...card,
-          currentCount: 0,
+      if (error) throw error;
+
+      if (data) {
+        const newCard: PrayerCard = {
+          id: data.id,
+          name: data.name,
+          currentCount: data.current_count,
+          targetCount: data.target_count,
           progress: 0,
         };
+        setCards(prev => [...prev, newCard]);
       }
-      return card;
-    }));
+    } catch (error) {
+      console.error('Error adding card:', error);
+    }
+  };
+
+  const deleteCard = async (cardId: string) => {
+    try {
+      const { error } = await supabase
+        .from('prayer_cards')
+        .delete()
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      setCards(prev => prev.filter(card => card.id !== cardId));
+    } catch (error) {
+      console.error('Error deleting card:', error);
+    }
+  };
+
+  const editCard = async (cardId: string, name: string, targetCount: number) => {
+    try {
+      const { error } = await supabase
+        .from('prayer_cards')
+        .update({
+          name,
+          target_count: targetCount,
+        })
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      setCards(prev => prev.map(card => {
+        if (card.id === cardId) {
+          return {
+            ...card,
+            name,
+            targetCount,
+            progress: calculateProgress(card.currentCount, targetCount),
+          };
+        }
+        return card;
+      }));
+    } catch (error) {
+      console.error('Error editing card:', error);
+    }
+  };
+
+  const resetCard = async (cardId: string) => {
+    try {
+      const { error } = await supabase
+        .from('prayer_cards')
+        .update({ current_count: 0 })
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      setCards(prev => prev.map(card => {
+        if (card.id === cardId) {
+          return {
+            ...card,
+            currentCount: 0,
+            progress: 0,
+          };
+        }
+        return card;
+      }));
+    } catch (error) {
+      console.error('Error resetting card:', error);
+    }
   };
 
   const loginAdmin = (pin: string): boolean => {
@@ -133,6 +259,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
     <PrayerContext.Provider value={{
       cards,
       isAdmin,
+      loading,
       updateCardProgress,
       addCard,
       deleteCard,

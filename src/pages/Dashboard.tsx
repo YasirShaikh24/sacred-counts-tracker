@@ -7,8 +7,19 @@ import { Settings, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
-  const { cards, isAdmin } = usePrayer();
+  const { cards, isAdmin, loading } = usePrayer();
   const [showAdminModal, setShowAdminModal] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen islamic-pattern flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading prayer cards...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen islamic-pattern">
