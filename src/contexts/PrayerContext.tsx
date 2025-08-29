@@ -84,7 +84,6 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
   const insertDefaultCards = async () => {
     try {
       const cardsToInsert = defaultCards.map(card => ({
-        id: card.id,
         name: card.name,
         current_count: card.currentCount,
         target_count: card.targetCount,
