@@ -199,7 +199,7 @@ const CardDetail = () => {
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-3 mb-4">
             {[100, 250, 500, 1000].map((num) => (
               <Button
                 key={num}
