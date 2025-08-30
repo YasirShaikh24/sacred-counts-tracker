@@ -199,8 +199,24 @@ const CardDetail = () => {
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-3 mb-4">
-            {[100, 250, 500, 1000].map((num) => (
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            {[100, 250, 500].map((num) => (
+              <Button
+                key={num}
+                variant={isAdmin ? "default" : "outline"}
+                onClick={() => {
+                  updateCardProgress(card.id, num);
+                  setIsAnimating(true);
+                  setTimeout(() => setIsAnimating(false), 600);
+                }}
+                className="aspect-square text-lg font-bold hover:scale-105 transition-transform"
+              >
+                +{num}
+              </Button>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[1000, 5000].map((num) => (
               <Button
                 key={num}
                 variant={isAdmin ? "default" : "outline"}
