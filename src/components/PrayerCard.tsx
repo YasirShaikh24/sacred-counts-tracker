@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrayerCard as PrayerCardType } from '@/types/prayer';
 import { usePrayer } from '@/contexts/PrayerContext';
 import { Trash2, Edit3, RotateCcw } from 'lucide-react';
+import { CircularProgress } from './CircularProgress';
 
 interface PrayerCardProps {
   card: PrayerCardType;
@@ -45,51 +46,52 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
   return (
     <div className="prayer-card islamic-pattern group" onClick={handleCardClick}>
       {isAdmin && (
-        <div className="admin-action absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="admin-action absolute top-3 right-3 flex gap-1 opacity-100 transition-opacity">
           <button
             onClick={handleEdit}
-            className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+            className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            <Edit3 className="w-4 h-4 text-primary" />
+            <Edit3 className="w-3.5 h-3.5 text-primary" />
           </button>
           <button
             onClick={handleReset}
-            className="p-2 rounded-full bg-orange-500/10 hover:bg-orange-500/20 transition-colors"
+            className="p-1.5 rounded-full bg-orange-500/10 hover:bg-orange-500/20 transition-colors"
           >
-            <RotateCcw className="w-4 h-4 text-orange-600" />
+            <RotateCcw className="w-3.5 h-3.5 text-orange-600" />
           </button>
           <button
             onClick={handleDelete}
-            className="p-2 rounded-full bg-destructive/10 hover:bg-destructive/20 transition-colors"
+            className="p-1.5 rounded-full bg-destructive/10 hover:bg-destructive/20 transition-colors"
           >
-            <Trash2 className="w-4 h-4 text-destructive" />
+            <Trash2 className="w-3.5 h-3.5 text-destructive" />
           </button>
         </div>
       )}
 
       <div className="space-y-4">
         <div>
-          <h3 className="text-xl font-bold text-foreground mb-2">{card.name}</h3>
-          <div className="text-sm text-muted-foreground">
+          <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2">{card.name}</h3>
+          <div className="text-xs text-muted-foreground">
             Target: {formatNumber(card.targetCount)}
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-muted-foreground">Progress</span>
-            <span className="text-sm font-bold text-primary">{card.progress}%</span>
+        <div className="flex items-center justify-between">
+          <CircularProgress 
+            progress={card.progress}
+            size={70}
+            strokeWidth={5}
+            currentCount={card.currentCount}
+            targetCount={card.targetCount}
+          />
+          <div className="text-right">
+            <div className="counter text-xl font-bold text-foreground">
+              {formatNumber(card.currentCount)}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {formatNumber(card.targetCount - card.currentCount)} left
+            </div>
           </div>
-          <div className="progress-container">
-            <div 
-              className="progress-bar" 
-              style={{ width: `${card.progress}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="counter text-center">
-          {formatNumber(card.currentCount)}
         </div>
       </div>
     </div>

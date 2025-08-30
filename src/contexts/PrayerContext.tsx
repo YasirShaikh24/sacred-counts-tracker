@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { PrayerCard, AppData } from '@/types/prayer';
 import { supabase } from '@/integrations/supabase/client';
+import { useNotifications } from '@/hooks/useNotifications';
 
 interface PrayerContextType {
   cards: PrayerCard[];
@@ -13,6 +14,9 @@ interface PrayerContextType {
   resetCard: (cardId: string) => void;
   loginAdmin: (pin: string) => boolean;
   logoutAdmin: () => void;
+  notifications: any[];
+  addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
+  removeNotification: (id: string) => void;
 }
 
 const PrayerContext = createContext<PrayerContextType | undefined>(undefined);
@@ -33,6 +37,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
   const [cards, setCards] = useState<PrayerCard[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { notifications, addNotification, removeNotification } = useNotifications();
 
   // Load data from Supabase on mount
   useEffect(() => {
@@ -141,6 +146,11 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+
+      // Show notification
+      const actionType = amount > 0 ? 'added' : 'removed';
+      const cardName = cards.find(c => c.id === cardId)?.name || 'Card';
+      addNotification(`${Math.abs(amount)} ${actionType} to ${cardName}`, 'success');
     } catch (error) {
       console.error('Error updating card progress:', error);
     }
@@ -169,6 +179,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
           progress: 0,
         };
         setCards(prev => [...prev, newCard]);
+        addNotification(`New prayer card "${name}" created`, 'success');
       }
     } catch (error) {
       console.error('Error adding card:', error);
@@ -184,7 +195,9 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
 
+      const cardName = cards.find(c => c.id === cardId)?.name || 'Card';
       setCards(prev => prev.filter(card => card.id !== cardId));
+      addNotification(`Prayer card "${cardName}" deleted`, 'info');
     } catch (error) {
       console.error('Error deleting card:', error);
     }
@@ -213,6 +226,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+      addNotification(`Prayer card "${name}" updated`, 'success');
     } catch (error) {
       console.error('Error editing card:', error);
     }
@@ -237,6 +251,8 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+      const cardName = cards.find(c => c.id === cardId)?.name || 'Card';
+      addNotification(`Progress reset for "${cardName}"`, 'info');
     } catch (error) {
       console.error('Error resetting card:', error);
     }
@@ -266,6 +282,9 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
       resetCard,
       loginAdmin,
       logoutAdmin,
+      notifications,
+      addNotification,
+      removeNotification,
     }}>
       {children}
     </PrayerContext.Provider>

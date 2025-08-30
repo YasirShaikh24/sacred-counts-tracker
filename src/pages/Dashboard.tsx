@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePrayer } from '@/contexts/PrayerContext';
 import { PrayerCard } from '@/components/PrayerCard';
 import { AdminModal } from '@/components/AdminModal';
-import { Settings, Plus } from 'lucide-react';
+import { Settings, Plus, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
@@ -37,39 +37,41 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {cards.map((card) => (
-            <PrayerCard key={card.id} card={card} />
-          ))}
-        </div>
-
-        {/* Add Card Button (Admin Only) */}
-        {isAdmin && (
-          <div className="flex justify-center mb-8">
-            <Link to="/add">
-              <Button className="flex items-center gap-2 px-6 py-3 text-lg">
-                <Plus className="w-5 h-5" />
-                Add New Prayer Card
-              </Button>
-            </Link>
+        {cards.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {cards.map((card) => (
+              <PrayerCard key={card.id} card={card} />
+            ))}
+            
+            {isAdmin && (
+              <Link to="/add">
+                <div className="prayer-card islamic-pattern flex flex-col items-center justify-center text-center group hover:bg-primary/5 transition-colors min-h-[180px] col-span-2 lg:col-span-1">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-4 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 shadow-lg">
+                    <Plus className="w-8 h-8 text-primary" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground mb-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                    ✨ Add New Prayer Card
+                  </div>
+                  <div className="text-sm text-muted-foreground px-4 leading-relaxed">
+                    Create a beautiful counter for your spiritual practice and sacred recitations
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
-        )}
-
-        {/* Empty State */}
-        {cards.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-              <Plus className="w-12 h-12 text-muted-foreground" />
+        ) : (
+          <div className="text-center py-12">
+            <div className="w-24 h-24 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-6">
+              <Heart className="w-12 h-12 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">No Prayer Cards Yet</h3>
-            <p className="text-muted-foreground mb-6">
-              Login as admin to add your first prayer card
-            </p>
-            <Button onClick={() => setShowAdminModal(true)}>
-              <Settings className="w-4 h-4 mr-2" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">No Prayer Cards Yet</h3>
+            <p className="text-muted-foreground mb-6">Start your spiritual journey by creating your first prayer counter</p>
+            <button
+              onClick={() => setShowAdminModal(true)}
+              className="px-6 py-2 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+            >
               Admin Login
-            </Button>
+            </button>
           </div>
         )}
       </div>
