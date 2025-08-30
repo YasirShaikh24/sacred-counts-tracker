@@ -38,37 +38,30 @@ export const NotificationToast = ({ notifications, onRemove }: NotificationToast
   const getStyles = (type: string) => {
     switch (type) {
       case 'success':
-        return 'bg-primary text-primary-foreground border-primary/30';
+        return 'bg-primary/10 border-primary/20 text-primary';
       case 'error':
-        return 'bg-destructive text-destructive-foreground border-destructive/30';
+        return 'bg-destructive/10 border-destructive/20 text-destructive';
       default:
-        return 'bg-card text-card-foreground border-border';
+        return 'bg-accent/50 border-accent text-accent-foreground';
     }
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-3 max-w-sm">
+    <div className="fixed top-4 right-4 z-50 space-y-2">
       {notifications.map((notification) => (
         <div
           key={notification.id}
           className={`
-            flex items-center gap-3 p-4 rounded-2xl border backdrop-blur-md
-            shadow-2xl animate-in slide-in-from-right-full duration-300
+            flex items-center gap-3 p-4 rounded-xl border backdrop-blur-sm
+            shadow-lg animate-in slide-in-from-right-full duration-300
             ${getStyles(notification.type)}
           `}
-          style={{
-            background: notification.type === 'success' ? 'hsl(155 85% 25% / 0.95)' : 
-                       notification.type === 'error' ? 'hsl(0 84% 60% / 0.95)' : 
-                       'hsl(0 0% 0% / 0.9)',
-            color: 'white',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}
         >
           {getIcon(notification.type)}
-          <span className="text-sm font-medium flex-1 text-white">{notification.message}</span>
+          <span className="text-sm font-medium flex-1">{notification.message}</span>
           <button
             onClick={() => onRemove(notification.id)}
-            className="opacity-70 hover:opacity-100 transition-opacity text-white"
+            className="opacity-60 hover:opacity-100 transition-opacity"
           >
             <X className="w-4 h-4" />
           </button>

@@ -46,52 +46,49 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
   return (
     <div className="prayer-card islamic-pattern group" onClick={handleCardClick}>
       {isAdmin && (
-        <div className="admin-action absolute top-3 right-3 flex gap-2 opacity-100 transition-opacity z-10">
+        <div className="admin-action absolute top-3 right-3 flex gap-1 opacity-100 transition-opacity">
           <button
             onClick={handleEdit}
-            className="p-2.5 rounded-xl bg-primary/20 hover:bg-primary/30 transition-colors shadow-md hover:shadow-lg"
+            className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            <Edit3 className="w-4 h-4 text-primary" />
+            <Edit3 className="w-3.5 h-3.5 text-primary" />
           </button>
           <button
             onClick={handleReset}
-            className="p-2.5 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 transition-colors shadow-md hover:shadow-lg"
+            className="p-1.5 rounded-full bg-orange-500/10 hover:bg-orange-500/20 transition-colors"
           >
-            <RotateCcw className="w-4 h-4 text-orange-600" />
+            <RotateCcw className="w-3.5 h-3.5 text-orange-600" />
           </button>
           <button
             onClick={handleDelete}
-            className="p-2.5 rounded-xl bg-destructive/20 hover:bg-destructive/30 transition-colors shadow-md hover:shadow-lg"
+            className="p-1.5 rounded-full bg-destructive/10 hover:bg-destructive/20 transition-colors"
           >
-            <Trash2 className="w-4 h-4 text-destructive" />
+            <Trash2 className="w-3.5 h-3.5 text-destructive" />
           </button>
         </div>
       )}
 
       <div className="space-y-4">
-        {/* Header - Name and Target */}
         <div>
-          <h3 className="text-base md:text-lg font-bold text-foreground mb-2 line-clamp-2">{card.name}</h3>
+          <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2">{card.name}</h3>
           <div className="text-xs text-muted-foreground">
             Target: {formatNumber(card.targetCount)}
           </div>
         </div>
 
-        {/* Main Content - Progress circle on left, numbers on right */}
         <div className="flex items-center justify-between">
-          <div className="flex-shrink-0">
-            <CircularProgress 
-              progress={card.progress}
-              size={80}
-              strokeWidth={8}
-              currentCount={card.currentCount}
-              targetCount={card.targetCount}
-            />
-          </div>
-          
-          {/* Right side - Only remaining count */}
-          <div className="text-right flex-1 ml-4">
-            <div className="text-sm font-medium text-orange-600">
+          <CircularProgress 
+            progress={card.progress}
+            size={70}
+            strokeWidth={5}
+            currentCount={card.currentCount}
+            targetCount={card.targetCount}
+          />
+          <div className="text-right">
+            <div className="counter text-xl font-bold text-foreground">
+              {formatNumber(card.currentCount)}
+            </div>
+            <div className="text-xs text-muted-foreground">
               {formatNumber(card.targetCount - card.currentCount)} left
             </div>
           </div>

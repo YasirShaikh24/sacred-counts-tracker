@@ -68,70 +68,62 @@ const CardDetail = () => {
           <h1 className="text-3xl font-bold">{card.name}</h1>
         </div>
 
-        {/* Main Card - New Layout */}
-        <div className="prayer-card mb-6">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Left Side - Circle Progress */}
-            <div className="flex-shrink-0">
-              <div className="relative">
-                <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="52"
-                    stroke="hsl(var(--muted))"
-                    strokeWidth="8"
-                    fill="transparent"
-                    opacity="0.3"
-                  />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="52"
-                    stroke="url(#gradient)"
-                    strokeWidth="8"
-                    fill="transparent"
-                    strokeDasharray={`${2 * Math.PI * 52}`}
-                    strokeDashoffset={`${2 * Math.PI * 52 * (1 - progressPercentage / 100)}`}
-                    className="transition-all duration-700 ease-out"
-                    strokeLinecap="round"
-                    style={{
-                      filter: 'drop-shadow(0 0 8px hsl(var(--primary) / 0.4))'
-                    }}
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="hsl(155, 85%, 25%)" />
-                      <stop offset="100%" stopColor="hsl(155, 70%, 35%)" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-xl font-bold text-primary mb-1">{card.progress}%</div>
-                  <div className="text-xs text-muted-foreground">Progress</div>
+        {/* Main Card */}
+        <div className="prayer-card mb-8">
+          <div className="text-center space-y-6">
+            {/* Progress Circle */}
+            <div className="relative w-48 h-48 mx-auto">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  stroke="hsl(var(--muted))"
+                  strokeWidth="8"
+                  fill="transparent"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  stroke="url(#gradient)"
+                  strokeWidth="8"
+                  fill="transparent"
+                  strokeDasharray={`${2 * Math.PI * 45}`}
+                  strokeDashoffset={`${2 * Math.PI * 45 * (1 - progressPercentage / 100)}`}
+                  className="transition-all duration-700 ease-out"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(155, 85%, 25%)" />
+                    <stop offset="100%" stopColor="hsl(155, 70%, 35%)" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className={`counter text-4xl ${isAnimating ? 'updating' : ''}`}>
+                  {formatNumber(card.currentCount)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {card.progress}% Complete
                 </div>
               </div>
             </div>
 
-            {/* Right Side - Count and Stats */}
-            <div className="flex-1 text-center md:text-left space-y-4">
-              <div className={`counter text-4xl md:text-5xl ${isAnimating ? 'updating' : ''} text-primary font-bold`}>
-                {formatNumber(card.currentCount)}
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="p-4 rounded-2xl bg-muted/50">
+                <div className="text-2xl font-bold text-primary">
+                  {formatNumber(card.targetCount)}
+                </div>
+                <div className="text-sm text-muted-foreground">Target</div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-muted/50">
-                  <div className="text-lg font-bold text-primary">
-                    {formatNumber(card.targetCount)}
-                  </div>
-                  <div className="text-xs text-muted-foreground">Target</div>
+              <div className="p-4 rounded-2xl bg-muted/50">
+                <div className="text-2xl font-bold text-orange-600">
+                  {formatNumber(remaining)}
                 </div>
-                <div className="p-3 rounded-xl bg-muted/50">
-                  <div className="text-lg font-bold text-orange-600">
-                    {formatNumber(remaining)}
-                  </div>
-                  <div className="text-xs text-muted-foreground">Remaining</div>
-                </div>
+                <div className="text-sm text-muted-foreground">Remaining</div>
               </div>
             </div>
           </div>
@@ -140,27 +132,21 @@ const CardDetail = () => {
 
         {/* Enhanced Input Section with ADD/REMOVE */}
         <div className="prayer-card mb-6">
-          <h3 className="text-lg font-semibold mb-4 text-center">Update Count</h3>
-          
-          {/* Full Width Input */}
-          <div className="mb-4">
+          <h3 className="text-xl font-semibold mb-4">Update Count</h3>
+          <div className="flex gap-2 p-3 bg-muted/20 rounded-xl border border-border">
             <Input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Enter count..."
-              className="w-full text-lg py-3 px-4 text-center text-xl font-semibold rounded-xl"
+              placeholder="Enter count"
+              className="flex-1 text-lg"
               min="1"
             />
-          </div>
-          
-          {/* Add/Remove Buttons */}
-          <div className="grid grid-cols-2 gap-3">
             <Button 
               onClick={handleAddProgress} 
               disabled={!amount || parseInt(amount) <= 0}
-              className="py-3 text-base font-bold rounded-xl bg-primary hover:bg-primary/90 transition-all hover:scale-105"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm"
             >
               ADD COUNT
             </Button>
@@ -175,7 +161,8 @@ const CardDetail = () => {
                 }
               }}
               disabled={!amount || parseInt(amount) <= 0}
-              className="py-3 text-base font-bold rounded-xl bg-destructive hover:bg-destructive/90 transition-all hover:scale-105"
+              variant="destructive"
+              className="px-4 py-2 text-sm"
             >
               REMOVE COUNT
             </Button>
@@ -184,10 +171,8 @@ const CardDetail = () => {
 
         {/* Enhanced Quick Add Buttons */}
         <div className="prayer-card mb-6">
-          <h3 className="text-lg font-semibold mb-4 text-center">Quick Add</h3>
-          
-          {/* Row 1: Small increments */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <h3 className="text-lg font-semibold mb-4">Quick Add</h3>
+          <div className="grid grid-cols-3 gap-2 mb-2">
             {[1, 10, 50].map((num) => (
               <Button
                 key={num}
@@ -197,16 +182,14 @@ const CardDetail = () => {
                   setIsAnimating(true);
                   setTimeout(() => setIsAnimating(false), 600);
                 }}
-                className="py-2 text-sm font-bold hover:scale-105 transition-transform rounded-xl"
+                className="text-sm font-bold hover:scale-105 transition-transform"
               >
                 +{num}
               </Button>
             ))}
           </div>
-          
-          {/* Row 2: Medium increments */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            {[100, 500, 1000].map((num) => (
+          <div className="grid grid-cols-4 gap-2 mb-2">
+            {[100, 500, 1000, 5000].map((num) => (
               <Button
                 key={num}
                 variant="secondary"
@@ -215,29 +198,24 @@ const CardDetail = () => {
                   setIsAnimating(true);
                   setTimeout(() => setIsAnimating(false), 600);
                 }}
-                className="py-2 text-sm font-bold hover:scale-105 transition-transform rounded-xl"
+                className="text-sm font-bold hover:scale-105 transition-transform"
               >
-                +{formatNumber(num)}
+                +{num}
               </Button>
             ))}
           </div>
-          
-          {/* Row 3: Large increments */}
-          <div className="grid grid-cols-2 gap-2">
-            {[5000, 10000].map((num) => (
-              <Button
-                key={num}
-                variant="secondary"
-                onClick={() => {
-                  updateCardProgress(card.id, num);
-                  setIsAnimating(true);
-                  setTimeout(() => setIsAnimating(false), 600);
-                }}
-                className="py-2 text-sm font-bold hover:scale-105 transition-transform rounded-xl"
-              >
-                +{formatNumber(num)}
-              </Button>
-            ))}
+          <div className="grid grid-cols-1 gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                updateCardProgress(card.id, 10000);
+                setIsAnimating(true);
+                setTimeout(() => setIsAnimating(false), 600);
+              }}
+              className="text-sm font-bold hover:scale-105 transition-transform"
+            >
+              +10000
+            </Button>
           </div>
         </div>
 
