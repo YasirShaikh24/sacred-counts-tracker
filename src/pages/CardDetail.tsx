@@ -155,23 +155,23 @@ const CardDetail = () => {
               className="w-full text-lg py-4"
               min="1"
             />
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <Button 
                 onClick={handleAddProgress} 
                 disabled={!amount || parseInt(amount) <= 0}
-                className="flex-1"
+                className="flex-1 text-sm"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Count
+                <Plus className="w-4 h-4 mr-1" />
+                Add
               </Button>
               <Button 
                 onClick={handleRemoveProgress} 
                 disabled={!amount || parseInt(amount) <= 0}
-                variant="outline"
-                className="flex-1"
+                variant="destructive"
+                className="flex-1 text-sm"
               >
-                <Minus className="w-4 h-4 mr-2" />
-                Remove Count
+                <Minus className="w-4 h-4 mr-1" />
+                Remove
               </Button>
             </div>
           </div>
@@ -200,7 +200,7 @@ const CardDetail = () => {
             ))}
           </div>
           <div className="grid grid-cols-4 gap-3">
-            {[1, 10, 50, 100, 250, 500, 1000].map((num) => (
+            {[100, 250, 500, 1000].map((num) => (
               <Button
                 key={num}
                 variant={isAdmin ? "default" : "outline"}
