@@ -160,7 +160,7 @@ const CardDetail = () => {
         <div className="prayer-card mb-6">
           <h3 className="text-lg font-semibold mb-4">Quick Add</h3>
           <div className="grid grid-cols-4 gap-3">
-            {[1, 5, 10, 100].map((num) => (
+            {[1, 5, 10, 50, 100, 250, 500, 1000, 5000, 10000].map((num) => (
               <Button
                 key={num}
                 variant={isAdmin ? "default" : "outline"}
