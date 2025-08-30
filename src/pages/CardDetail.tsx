@@ -129,11 +129,10 @@ const CardDetail = () => {
           </div>
         </div>
 
-
-        {/* Enhanced Input Section with ADD/REMOVE */}
+        {/* Add Progress Section */}
         <div className="prayer-card mb-6">
-          <h3 className="text-xl font-semibold mb-4">Update Count</h3>
-          <div className="flex gap-2 p-3 bg-muted/20 rounded-xl border border-border">
+          <h3 className="text-xl font-semibold mb-4">Add Your Contribution</h3>
+          <div className="flex gap-3">
             <Input
               type="number"
               value={amount}
@@ -146,77 +145,41 @@ const CardDetail = () => {
             <Button 
               onClick={handleAddProgress} 
               disabled={!amount || parseInt(amount) <= 0}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-sm"
+              className="px-6"
             >
-              ADD COUNT
-            </Button>
-            <Button 
-              onClick={() => {
-                const numAmount = parseInt(amount);
-                if (numAmount && numAmount > 0) {
-                  updateCardProgress(card.id, -numAmount);
-                  setAmount('');
-                  setIsAnimating(true);
-                  setTimeout(() => setIsAnimating(false), 600);
-                }
-              }}
-              disabled={!amount || parseInt(amount) <= 0}
-              variant="destructive"
-              className="px-4 py-2 text-sm"
-            >
-              REMOVE COUNT
+              <Plus className="w-4 h-4 mr-2" />
+              Add
             </Button>
           </div>
+          <p className="text-sm text-muted-foreground mt-2">
+            🌟 Your contribution counts towards the group goal
+          </p>
         </div>
 
-        {/* Enhanced Quick Add Buttons */}
+        {/* Quick Add Buttons - Enhanced for Admins */}
         <div className="prayer-card mb-6">
           <h3 className="text-lg font-semibold mb-4">Quick Add</h3>
-          <div className="grid grid-cols-3 gap-2 mb-2">
-            {[1, 10, 50].map((num) => (
+          <div className="grid grid-cols-4 gap-3">
+            {[1, 5, 10, 100].map((num) => (
               <Button
                 key={num}
-                variant="secondary"
+                variant={isAdmin ? "default" : "outline"}
                 onClick={() => {
                   updateCardProgress(card.id, num);
                   setIsAnimating(true);
                   setTimeout(() => setIsAnimating(false), 600);
                 }}
-                className="text-sm font-bold hover:scale-105 transition-transform"
+                className="aspect-square text-lg font-bold hover:scale-105 transition-transform"
               >
                 +{num}
               </Button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-2 mb-2">
-            {[100, 500, 1000, 5000].map((num) => (
-              <Button
-                key={num}
-                variant="secondary"
-                onClick={() => {
-                  updateCardProgress(card.id, num);
-                  setIsAnimating(true);
-                  setTimeout(() => setIsAnimating(false), 600);
-                }}
-                className="text-sm font-bold hover:scale-105 transition-transform"
-              >
-                +{num}
-              </Button>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                updateCardProgress(card.id, 10000);
-                setIsAnimating(true);
-                setTimeout(() => setIsAnimating(false), 600);
-              }}
-              className="text-sm font-bold hover:scale-105 transition-transform"
-            >
-              +10000
-            </Button>
-          </div>
+          {isAdmin && (
+            <p className="text-sm text-muted-foreground mt-2 text-center">
+              🔓 Admin mode - Quick updates enabled
+            </p>
+          )}
         </div>
 
         {/* Admin Actions */}
