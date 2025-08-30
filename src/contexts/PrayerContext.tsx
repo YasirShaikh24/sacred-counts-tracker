@@ -137,10 +137,10 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
 
     setNotifications(prev => [...prev, notification]);
 
-    // Auto remove after 4 seconds
+    // Auto remove after 2 seconds
     setTimeout(() => {
       removeNotification(notification.id);
-    }, 4000);
+    }, 2000);
   };
 
   const removeNotification = (id: string) => {

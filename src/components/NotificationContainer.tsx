@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePrayer } from '@/contexts/PrayerContext';
-import { X, CheckCircle, Info, AlertTriangle, AlertCircle } from 'lucide-react';
+import { X, CheckCircle, Info, AlertTriangle, AlertCircle, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const NotificationContainer = () => {
@@ -14,6 +14,10 @@ const NotificationContainer = () => {
         return <AlertTriangle className="w-5 h-5 text-white" />;
       case 'error':
         return <AlertCircle className="w-5 h-5 text-white" />;
+      case 'removed':
+        return <Trash2 className="w-5 h-5 text-white" />;
+      case 'added':
+        return <Plus className="w-5 h-5 text-white" />;
       default:
         return <Info className="w-5 h-5 text-white" />;
     }
@@ -22,26 +26,17 @@ const NotificationContainer = () => {
   const getNotificationStyle = (type: string) => {
     switch (type) {
       case 'success':
-        return 'bg-green-500 border-green-600';
+        return 'bg-black/80 border-2 border-green-500';
       case 'warning':
-        return 'bg-yellow-500 border-yellow-600';
+        return 'bg-black/80 border-2 border-yellow-500';
       case 'error':
-        return 'bg-red-500 border-red-600';
+        return 'bg-black/80 border-2 border-red-500';
+      case 'removed':
+        return 'bg-black/80 border-2 border-red-500';
+      case 'added':
+        return 'bg-black/80 border-2 border-yellow-500';
       default:
-        return 'bg-blue-500 border-blue-600';
-    }
-  };
-
-  const getProgressBarColor = (type: string) => {
-    switch (type) {
-      case 'success':
-        return 'bg-green-600';
-      case 'warning':
-        return 'bg-yellow-600';
-      case 'error':
-        return 'bg-red-600';
-      default:
-        return 'bg-blue-600';
+        return 'bg-black/80 border-2 border-blue-500';
     }
   };
 
@@ -54,15 +49,6 @@ const NotificationContainer = () => {
     >
       <style>
         {`
-          @keyframes shrinkProgress {
-            from { width: 100%; }
-            to { width: 0%; }
-          }
-          
-          .progress-bar {
-            animation: shrinkProgress 4s linear forwards;
-          }
-          
           @keyframes slideInRight {
             from { 
               transform: translateX(100%); 
@@ -85,7 +71,6 @@ const NotificationContainer = () => {
           key={notification.id}
           className={`
             ${getNotificationStyle(notification.type)}
-            border
             rounded-lg shadow-lg 
             p-4 pr-12
             slide-in
@@ -112,17 +97,10 @@ const NotificationContainer = () => {
             variant="ghost"
             size="sm"
             onClick={() => removeNotification(notification.id)}
-            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-black/20 text-white"
+            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-white/20 text-white"
           >
             <X className="w-4 h-4" />
           </Button>
-
-          {/* Auto-dismiss progress bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20 rounded-b-lg overflow-hidden">
-            <div 
-              className={`h-full progress-bar ${getProgressBarColor(notification.type)}`}
-            />
-          </div>
         </div>
       ))}
     </div>
