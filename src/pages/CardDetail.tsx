@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePrayer } from '@/contexts/PrayerContext';
-import { ArrowLeft, Plus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -36,6 +36,19 @@ const CardDetail = () => {
     const numAmount = parseInt(amount);
     if (numAmount && numAmount > 0) {
       updateCardProgress(card.id, numAmount);
+      setAmount('');
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 600);
+    }
+  };
+
+  const handleRemoveProgress = () => {
+    const numAmount = parseInt(amount);
+    if (numAmount && numAmount > 0) {
+      // Don't let current count go below 0
+      const newCount = Math.max(card.currentCount - numAmount, 0);
+      const actualRemoval = card.currentCount - newCount;
+      updateCardProgress(card.id, -actualRemoval);
       setAmount('');
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 600);
@@ -132,35 +145,62 @@ const CardDetail = () => {
         {/* Add Progress Section */}
         <div className="prayer-card mb-6">
           <h3 className="text-xl font-semibold mb-4">Add Your Contribution</h3>
-          <div className="flex gap-3">
+          <div className="space-y-4">
             <Input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Enter count"
-              className="flex-1 text-lg"
+              className="w-full text-lg py-4"
               min="1"
             />
-            <Button 
-              onClick={handleAddProgress} 
-              disabled={!amount || parseInt(amount) <= 0}
-              className="px-6"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                onClick={handleAddProgress} 
+                disabled={!amount || parseInt(amount) <= 0}
+                className="flex-1"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Count
+              </Button>
+              <Button 
+                onClick={handleRemoveProgress} 
+                disabled={!amount || parseInt(amount) <= 0}
+                variant="outline"
+                className="flex-1"
+              >
+                <Minus className="w-4 h-4 mr-2" />
+                Remove Count
+              </Button>
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
             🌟 Your contribution counts towards the group goal
           </p>
         </div>
 
-        {/* Quick Add Buttons - Enhanced for Admins */}
+        {/* Quick Add Buttons */}
         <div className="prayer-card mb-6">
           <h3 className="text-lg font-semibold mb-4">Quick Add</h3>
+          <div className="grid grid-cols-4 gap-3 mb-4">
+            {[1, 5, 10, 50].map((num) => (
+              <Button
+                key={num}
+                variant={isAdmin ? "default" : "outline"}
+                onClick={() => {
+                  updateCardProgress(card.id, num);
+                  setIsAnimating(true);
+                  setTimeout(() => setIsAnimating(false), 600);
+                }}
+                className="aspect-square text-lg font-bold hover:scale-105 transition-transform"
+              >
+                +{num}
+              </Button>
+            ))}
+          </div>
           <div className="grid grid-cols-4 gap-3">
-            {[1, 5, 10, 50, 100, 250, 500, 1000, 5000, 10000].map((num) => (
+            {[1, 10, 50, 100, 250, 500, 1000].map((num) => (
               <Button
                 key={num}
                 variant={isAdmin ? "default" : "outline"}
