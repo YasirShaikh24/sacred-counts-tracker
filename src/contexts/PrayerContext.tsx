@@ -2,10 +2,18 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { PrayerCard, AppData } from '@/types/prayer';
 import { supabase } from '@/integrations/supabase/client';
 
+interface Notification {
+  id: string;
+  message: string;
+  type: 'success' | 'info' | 'warning' | 'error';
+  timestamp: number;
+}
+
 interface PrayerContextType {
   cards: PrayerCard[];
   isAdmin: boolean;
   loading: boolean;
+  notifications: Notification[];
   updateCardProgress: (cardId: string, amount: number) => void;
   addCard: (name: string, targetCount: number) => void;
   deleteCard: (cardId: string) => void;
@@ -13,6 +21,8 @@ interface PrayerContextType {
   resetCard: (cardId: string) => void;
   loginAdmin: (pin: string) => boolean;
   logoutAdmin: () => void;
+  addNotification: (message: string, type?: 'success' | 'info' | 'warning' | 'error') => void;
+  removeNotification: (id: string) => void;
 }
 
 const PrayerContext = createContext<PrayerContextType | undefined>(undefined);
@@ -33,6 +43,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
   const [cards, setCards] = useState<PrayerCard[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   // Load data from Supabase on mount
   useEffect(() => {
@@ -116,12 +127,32 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
     return Math.min(Math.round((current / target) * 100), 100);
   };
 
+  const addNotification = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'info') => {
+    const notification: Notification = {
+      id: Date.now().toString(),
+      message,
+      type,
+      timestamp: Date.now(),
+    };
+
+    setNotifications(prev => [...prev, notification]);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      removeNotification(notification.id);
+    }, 4000);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
+  };
+
   const updateCardProgress = async (cardId: string, amount: number) => {
     try {
       const card = cards.find(c => c.id === cardId);
       if (!card) return;
 
-      const newCount = card.currentCount + amount;
+      const newCount = Math.max(0, card.currentCount + amount);
 
       const { error } = await supabase
         .from('prayer_cards')
@@ -141,8 +172,14 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+
+      // Add notification
+      const actionText = amount > 0 ? `+${amount} added to` : `${Math.abs(amount)} removed from`;
+      addNotification(`${actionText} ${card.name}`, 'success');
+
     } catch (error) {
       console.error('Error updating card progress:', error);
+      addNotification('Failed to update card progress', 'error');
     }
   };
 
@@ -169,14 +206,19 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
           progress: 0,
         };
         setCards(prev => [...prev, newCard]);
+        addNotification(`New card "${name}" created successfully!`, 'success');
       }
     } catch (error) {
       console.error('Error adding card:', error);
+      addNotification('Failed to create new card', 'error');
     }
   };
 
   const deleteCard = async (cardId: string) => {
     try {
+      const card = cards.find(c => c.id === cardId);
+      const cardName = card?.name || 'Card';
+
       const { error } = await supabase
         .from('prayer_cards')
         .delete()
@@ -185,8 +227,10 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
       if (error) throw error;
 
       setCards(prev => prev.filter(card => card.id !== cardId));
+      addNotification(`"${cardName}" deleted successfully`, 'info');
     } catch (error) {
       console.error('Error deleting card:', error);
+      addNotification('Failed to delete card', 'error');
     }
   };
 
@@ -213,13 +257,19 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+
+      addNotification(`"${name}" updated successfully`, 'success');
     } catch (error) {
       console.error('Error editing card:', error);
+      addNotification('Failed to update card', 'error');
     }
   };
 
   const resetCard = async (cardId: string) => {
     try {
+      const card = cards.find(c => c.id === cardId);
+      const cardName = card?.name || 'Card';
+
       const { error } = await supabase
         .from('prayer_cards')
         .update({ current_count: 0 })
@@ -237,21 +287,27 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
         }
         return card;
       }));
+
+      addNotification(`"${cardName}" progress reset to 0`, 'warning');
     } catch (error) {
       console.error('Error resetting card:', error);
+      addNotification('Failed to reset card progress', 'error');
     }
   };
 
   const loginAdmin = (pin: string): boolean => {
     if (pin === DEFAULT_PIN) {
       setIsAdmin(true);
+      addNotification('Admin mode activated', 'success');
       return true;
     }
+    addNotification('Invalid admin PIN', 'error');
     return false;
   };
 
   const logoutAdmin = () => {
     setIsAdmin(false);
+    addNotification('Admin mode deactivated', 'info');
   };
 
   return (
@@ -259,6 +315,7 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
       cards,
       isAdmin,
       loading,
+      notifications,
       updateCardProgress,
       addCard,
       deleteCard,
@@ -266,6 +323,8 @@ export const PrayerProvider = ({ children }: { children: ReactNode }) => {
       resetCard,
       loginAdmin,
       logoutAdmin,
+      addNotification,
+      removeNotification,
     }}>
       {children}
     </PrayerContext.Provider>

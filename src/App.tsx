@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrayerProvider } from "@/contexts/PrayerContext";
+import NotificationContainer from "@/components/NotificationContainer";
 import Dashboard from "./pages/Dashboard";
 import CardDetail from "./pages/CardDetail";
 import AddCard from "./pages/AddCard";
@@ -27,6 +28,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <NotificationContainer />
         </BrowserRouter>
       </PrayerProvider>
     </TooltipProvider>
