@@ -46,22 +46,22 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
   return (
     <div className="prayer-card islamic-pattern group" onClick={handleCardClick}>
       {isAdmin && (
-        <div className="admin-action absolute top-2 right-2 flex gap-1 opacity-100 transition-opacity z-10">
+        <div className="admin-action absolute top-3 right-3 flex gap-2 opacity-100 transition-opacity z-10">
           <button
             onClick={handleEdit}
-            className="p-2 rounded-xl bg-primary/20 hover:bg-primary/30 transition-colors shadow-md"
+            className="p-2.5 rounded-xl bg-primary/20 hover:bg-primary/30 transition-colors shadow-md hover:shadow-lg"
           >
             <Edit3 className="w-4 h-4 text-primary" />
           </button>
           <button
             onClick={handleReset}
-            className="p-2 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 transition-colors shadow-md"
+            className="p-2.5 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 transition-colors shadow-md hover:shadow-lg"
           >
             <RotateCcw className="w-4 h-4 text-orange-600" />
           </button>
           <button
             onClick={handleDelete}
-            className="p-2 rounded-xl bg-destructive/20 hover:bg-destructive/30 transition-colors shadow-md"
+            className="p-2.5 rounded-xl bg-destructive/20 hover:bg-destructive/30 transition-colors shadow-md hover:shadow-lg"
           >
             <Trash2 className="w-4 h-4 text-destructive" />
           </button>
@@ -76,7 +76,8 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        {/* Updated Layout - Progress centered, numbers below */}
+        <div className="flex flex-col items-center space-y-3">
           <CircularProgress 
             progress={card.progress}
             size={60}
@@ -84,12 +85,24 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
             currentCount={card.currentCount}
             targetCount={card.targetCount}
           />
-          <div className="text-right flex-1 ml-3">
-            <div className="counter text-lg md:text-xl font-bold text-primary">
-              {formatNumber(card.currentCount)}
+          
+          {/* Numbers moved below progress */}
+          <div className="flex justify-between items-center w-full">
+            <div className="text-center flex-1">
+              <div className="counter text-lg md:text-xl font-bold text-primary">
+                {formatNumber(card.currentCount)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Progress
+              </div>
             </div>
-            <div className="text-xs text-muted-foreground">
-              {formatNumber(card.targetCount - card.currentCount)} left
+            <div className="text-center flex-1">
+              <div className="text-lg md:text-xl font-bold text-orange-600">
+                {formatNumber(card.targetCount - card.currentCount)}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Left
+              </div>
             </div>
           </div>
         </div>
