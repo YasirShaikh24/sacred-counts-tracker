@@ -38,22 +38,22 @@ const Dashboard = () => {
         </div>
 
         {cards.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
             {cards.map((card) => (
               <PrayerCard key={card.id} card={card} />
             ))}
             
             {isAdmin && (
-              <Link to="/add">
-                <div className="prayer-card islamic-pattern flex flex-col items-center justify-center text-center group hover:bg-primary/5 transition-colors min-h-[180px] col-span-2 lg:col-span-1">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-4 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 shadow-lg">
-                    <Plus className="w-8 h-8 text-primary" />
+              <Link to="/add" className="col-span-2 md:col-span-1">
+                <div className="prayer-card islamic-pattern flex flex-col items-center justify-center text-center group hover:bg-primary/5 transition-colors min-h-[200px] border-2 border-dashed border-primary/30 hover:border-primary/60">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 shadow-lg group-hover:scale-110">
+                    <Plus className="w-10 h-10 text-primary" />
                   </div>
-                  <div className="text-lg font-bold text-foreground mb-2 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                    ✨ Add New Prayer Card
+                  <div className="text-lg font-bold text-foreground mb-3 bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                    Add New Prayer Card
                   </div>
                   <div className="text-sm text-muted-foreground px-4 leading-relaxed">
-                    Create a beautiful counter for your spiritual practice and sacred recitations
+                    Create a beautiful counter for your spiritual practice
                   </div>
                 </div>
               </Link>
