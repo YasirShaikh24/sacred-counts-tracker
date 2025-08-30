@@ -69,6 +69,7 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
       )}
 
       <div className="space-y-4">
+        {/* Header - Name and Target */}
         <div>
           <h3 className="text-base md:text-lg font-bold text-foreground mb-2 line-clamp-2">{card.name}</h3>
           <div className="text-xs text-muted-foreground">
@@ -76,21 +77,20 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
           </div>
         </div>
 
-        {/* Updated Layout - Larger progress circle, clean numbers below */}
-        <div className="flex flex-col items-center space-y-4">
-          <CircularProgress 
-            progress={card.progress}
-            size={80}
-            strokeWidth={8}
-            currentCount={card.currentCount}
-            targetCount={card.targetCount}
-          />
+        {/* Main Content - Progress circle on left, numbers on right */}
+        <div className="flex items-center justify-between">
+          <div className="flex-shrink-0">
+            <CircularProgress 
+              progress={card.progress}
+              size={80}
+              strokeWidth={8}
+              currentCount={card.currentCount}
+              targetCount={card.targetCount}
+            />
+          </div>
           
-          {/* Clean numbers layout below progress */}
-          <div className="text-center w-full">
-            <div className="counter text-2xl md:text-3xl font-bold text-primary mb-1">
-              {formatNumber(card.currentCount)}
-            </div>
+          {/* Right side - Only remaining count */}
+          <div className="text-right flex-1 ml-4">
             <div className="text-sm font-medium text-orange-600">
               {formatNumber(card.targetCount - card.currentCount)} left
             </div>
