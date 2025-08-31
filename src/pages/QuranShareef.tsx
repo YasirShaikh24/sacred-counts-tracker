@@ -39,7 +39,7 @@ const QuranShareef = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background border-b border-border">
-        <div className="container mx-auto px-4 py-4">
+        <div className="px-4 py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -57,18 +57,18 @@ const QuranShareef = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      {/* Main Content - Fixed mobile spacing */}
+      <main className="px-3 py-6">
         <ScrollArea className="h-[calc(100vh-140px)]">
-          <div className="space-y-3">
+          <div className="space-y-3 w-full">
             {siparas.map((sipara) => (
               <div
                 key={sipara.id}
-                className="flex items-center gap-4 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-shadow"
+                className="flex items-center gap-2 p-3 bg-card border border-border rounded-lg hover:shadow-md transition-shadow w-full"
               >
                 {/* Sipara Number */}
-                <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-muted-foreground">
+                <div className="flex-shrink-0 w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                  <span className="text-xs font-medium text-muted-foreground">
                     {sipara.sipara_number}
                   </span>
                 </div>
@@ -84,32 +84,32 @@ const QuranShareef = () => {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2 flex-shrink-0">
+                {/* Action Buttons - Compact for mobile */}
+                <div className="flex gap-1 flex-shrink-0">
                   {/* Edit Button (Admin Only) */}
                   {isAdmin && (
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditClick(sipara.sipara_number)}
-                      className="h-8 px-3 text-xs"
+                      className="h-7 px-2 text-xs border-gray-600 hover:bg-gray-100"
                     >
                       <Edit className="w-3 h-3 mr-1" />
                       Edit
                     </Button>
                   )}
 
-                  {/* Submit Button */}
+                  {/* Submit/Completed Button */}
                   <Button
                     variant={sipara.is_completed ? "default" : "outline"}
                     size="sm"
                     onClick={() => markSiparaCompleted(sipara.sipara_number)}
-                    className={`h-8 px-3 text-xs ${
+                    className={`h-7 px-2 text-xs ${
                       sipara.is_completed 
-                        ? 'bg-green-600 hover:bg-green-700 text-white' 
-                        : 'hover:bg-accent'
+                        ? 'bg-green-600 hover:bg-green-700 text-white border-green-600' 
+                        : 'border-gray-600 hover:bg-gray-100'
                     }`}
-                    disabled={!sipara.assigned_person_name}
+                    disabled={!sipara.assigned_person_name && !sipara.is_completed}
                   >
                     {sipara.is_completed ? (
                       <>
