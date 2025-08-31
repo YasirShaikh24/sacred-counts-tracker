@@ -7,7 +7,7 @@ import { useQuran } from '@/contexts/QuranContext';
 import { usePrayer } from '@/contexts/PrayerContext';
 import { AssignSiparaModal } from '@/components/AssignSiparaModal';
 
-export const QuranShareef = () => {
+const QuranShareef = () => {
   const navigate = useNavigate();
   const { siparas, loading, assignPersonToSipara, markSiparaCompleted } = useQuran();
   const { isAdmin } = usePrayer();
@@ -141,3 +141,5 @@ export const QuranShareef = () => {
     </div>
   );
 };
+
+export default QuranShareef;

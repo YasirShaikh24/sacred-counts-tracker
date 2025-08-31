@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import CardDetail from "./pages/CardDetail";
 import AddCard from "./pages/AddCard";
 import EditCard from "./pages/EditCard";
-import { QuranShareef } from "./pages/QuranShareef";
+import QuranShareef from "./pages/QuranShareef";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
