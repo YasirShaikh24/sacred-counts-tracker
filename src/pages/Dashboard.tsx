@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePrayer } from '@/contexts/PrayerContext';
 import { PrayerCard } from '@/components/PrayerCard';
 import { AdminModal } from '@/components/AdminModal';
-import { Settings, Plus } from 'lucide-react';
+import { Settings, Plus, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
   const { cards, isAdmin, loading } = usePrayer();
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -35,6 +36,17 @@ const Dashboard = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Group Prayer Tracker - Everyone's contributions count together
           </p>
+        </div>
+
+        {/* Quran Shareef Button */}
+        <div className="mb-8 flex justify-center">
+          <Button
+            onClick={() => navigate('/quran-shareef')}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg font-medium rounded-lg flex items-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <BookOpen className="w-6 h-6" />
+            QURAN SHAREEF
+          </Button>
         </div>
 
         {/* Cards Grid */}

@@ -41,6 +41,39 @@ export type Database = {
         }
         Relationships: []
       }
+      quran_shareef: {
+        Row: {
+          assigned_by: string | null
+          assigned_person_name: string | null
+          completed_date: string | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          sipara_number: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          assigned_person_name?: string | null
+          completed_date?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          sipara_number: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          assigned_person_name?: string | null
+          completed_date?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          sipara_number?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
