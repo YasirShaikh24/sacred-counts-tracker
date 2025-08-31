@@ -12,12 +12,12 @@ interface AssignSiparaModalProps {
   onAssign: (siparaNumber: number, personName: string) => void;
 }
 
-export const AssignSiparaModal = ({ 
-  isOpen, 
-  onClose, 
-  siparaNumber, 
-  currentName, 
-  onAssign 
+export const AssignSiparaModal = ({
+  isOpen,
+  onClose,
+  siparaNumber,
+  currentName,
+  onAssign
 }: AssignSiparaModalProps) => {
   const [personName, setPersonName] = useState(currentName || '');
 
@@ -36,7 +36,7 @@ export const AssignSiparaModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-background border border-border">
+      <DialogContent className="sm:max-w-md bg-background border border-border fixed top-4 left-1/2 transform -translate-x-1/2 translate-y-0 sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2">
         <DialogHeader>
           <DialogTitle className="text-foreground">
             Assign Sipara {siparaNumber}
