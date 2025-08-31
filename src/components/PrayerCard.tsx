@@ -43,33 +43,37 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
   };
 
   return (
-    <div className="prayer-card islamic-pattern group" onClick={handleCardClick}>
+    <div className="prayer-card islamic-pattern group relative cursor-pointer" onClick={handleCardClick}>
+      {/* Always visible admin buttons when in admin mode */}
       {isAdmin && (
-        <div className="admin-action absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="admin-action absolute top-3 right-3 flex gap-2 z-10">
           <button
             onClick={handleEdit}
-            className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+            className="p-2 rounded-full bg-green-600/90 hover:bg-green-600 transition-all duration-200 shadow-lg backdrop-blur-sm"
+            title="Edit Card"
           >
-            <Edit3 className="w-4 h-4 text-primary" />
+            <Edit3 className="w-4 h-4 text-white" />
           </button>
           <button
             onClick={handleReset}
-            className="p-2 rounded-full bg-orange-500/10 hover:bg-orange-500/20 transition-colors"
+            className="p-2 rounded-full bg-orange-500/90 hover:bg-orange-500 transition-all duration-200 shadow-lg backdrop-blur-sm"
+            title="Reset Progress"
           >
-            <RotateCcw className="w-4 h-4 text-orange-600" />
+            <RotateCcw className="w-4 h-4 text-white" />
           </button>
           <button
             onClick={handleDelete}
-            className="p-2 rounded-full bg-destructive/10 hover:bg-destructive/20 transition-colors"
+            className="p-2 rounded-full bg-red-600/90 hover:bg-red-600 transition-all duration-200 shadow-lg backdrop-blur-sm"
+            title="Delete Card"
           >
-            <Trash2 className="w-4 h-4 text-destructive" />
+            <Trash2 className="w-4 h-4 text-white" />
           </button>
         </div>
       )}
 
       <div className="space-y-4">
         <div>
-          <h3 className="text-xl font-bold text-foreground mb-2">{card.name}</h3>
+          <h3 className="text-xl font-bold text-foreground mb-2 pr-12">{card.name}</h3>
           <div className="text-sm text-muted-foreground">
             Target: {formatNumber(card.targetCount)}
           </div>
@@ -92,6 +96,13 @@ export const PrayerCard = ({ card }: PrayerCardProps) => {
           {formatNumber(card.currentCount)}
         </div>
       </div>
+
+      {/* Admin mode indicator */}
+      {isAdmin && (
+        <div className="absolute bottom-3 left-3 text-xs text-green-400 font-medium opacity-75">
+          Admin Mode
+        </div>
+      )}
     </div>
   );
 };
