@@ -21,10 +21,12 @@ export const AssignSiparaModal = ({
 }: AssignSiparaModalProps) => {
   const [personName, setPersonName] = useState(currentName || '');
 
-  // Update personName when currentName changes (when switching between different siparas)
+  // Update personName when modal opens or currentName changes (when switching between different siparas)
   React.useEffect(() => {
-    setPersonName(currentName || '');
-  }, [currentName, siparaNumber]);
+    if (isOpen) {
+      setPersonName(currentName || '');
+    }
+  }, [currentName, siparaNumber, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
