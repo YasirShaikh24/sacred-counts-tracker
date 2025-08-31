@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePrayer } from '@/contexts/PrayerContext';
-import { ArrowLeft, Plus, Minus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, RotateCcw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -74,11 +74,23 @@ const CardDetail = () => {
     <div className="min-h-screen islamic-pattern">
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => navigate('/')}>
-            <ArrowLeft className="w-5 h-5" />
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={() => navigate('/')}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-3xl font-bold">{card.name}</h1>
+          </div>
+          
+          {/* Quick Access to Quran Shareef */}
+          <Button
+            onClick={() => navigate('/quran-shareef')}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <BookOpen className="w-4 h-4" />
+            Quran Shareef
           </Button>
-          <h1 className="text-3xl font-bold">{card.name}</h1>
         </div>
 
         {/* Main Card */}
