@@ -21,6 +21,11 @@ export const AssignSiparaModal = ({
 }: AssignSiparaModalProps) => {
   const [personName, setPersonName] = useState(currentName || '');
 
+  // Update personName when currentName changes (when switching between different siparas)
+  React.useEffect(() => {
+    setPersonName(currentName || '');
+  }, [currentName, siparaNumber]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (personName.trim()) {
