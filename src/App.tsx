@@ -11,6 +11,7 @@ import CardDetail from "./pages/CardDetail";
 import AddCard from "./pages/AddCard";
 import EditCard from "./pages/EditCard";
 import QuranShareef from "./pages/QuranShareef";
+import DigitalTasbeeh from "./pages/DigitalTasbeeh";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/add" element={<AddCard />} />
               <Route path="/edit/:cardId" element={<EditCard />} />
               <Route path="/quran-shareef" element={<QuranShareef />} />
+              <Route path="/digital-tasbeeh" element={<DigitalTasbeeh />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
