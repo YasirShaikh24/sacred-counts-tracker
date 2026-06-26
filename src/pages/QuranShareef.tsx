@@ -64,7 +64,11 @@ const QuranShareef = () => {
             {siparas.map((sipara) => (
               <div
                 key={sipara.id}
-                className="flex items-center gap-2 p-3 bg-card border border-border rounded-lg hover:shadow-md transition-shadow w-full"
+                className={`flex items-center gap-2 p-3 border rounded-lg hover:shadow-md transition-all w-full ${
+                  sipara.is_completed
+                    ? 'bg-green-900 border-green-700'
+                    : 'bg-card border-border'
+                }`}
               >
                 {/* Sipara Number */}
                 <div className="flex-shrink-0 w-8 h-8 bg-muted rounded-full flex items-center justify-center">
